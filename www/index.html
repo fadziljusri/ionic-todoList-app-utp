@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link rel="manifest" href="manifest.json">
+
+    <!-- un-comment this code to enable service worker
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(() => console.log('service worker installed'))
+          .catch(err => console.log('Error', err));
+      }
+    </script>-->
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>
+
+    <!-- AngularFire -->
+    <script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
+
+    <script>
+      // Initialize the Firebase SDK
+      var config = {
+        apiKey: "AIzaSyD2fUUO8jvTsUyDq9Tg_N5THOFbDEFJGIU",
+        authDomain: "test-app-c5651.firebaseapp.com",
+        databaseURL: "https://test-app-c5651.firebaseio.com",
+        storageBucket: "test-app-c5651.appspot.com",
+        messagingSenderId: "545059413853"
+      };
+      firebase.initializeApp(config);
+    </script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
+  </head>
+  <body ng-app="starter">
+
+    <ion-pane>
+      <ion-nav-bar class="bar-positive" align-title="center">
+        <ion-nav-back-button></ion-nav-back-button>
+        <ion-nav-view></ion-nav-view>
+
+        <!-- Home -->
+        <script type="text/ng-template" id="home.html">
+          <ion-view view-title="Home">
+            <ion-content class="note-content">
+              <div class="row">
+                <div class="col">
+                  <h2 class="text-center">Welcome to easyNote!</h2>
+                  <p class="text-center">An interactive to do list app!</p>
+
+                  <a class="button button-block button-positive" ui-sref="listNotes">View Notes</a>
+                  <a class="button button-block button-calm" ui-sref="addNote">Add Notes</a>
+                  <a class="button button-block button-balanced" ui-sref="editNote">Edit Notes</a>
+                  <a class="button button-block button-assertive" ui-sref="deleteNote">Delete Notes</a>
+
+                </div>
+              </div>
+            </ion-content>
+          </ion-view>
+        </script> <!-- End Home -->
+
+        <!-- Add Note -->
+        <script type="text/ng-template" id="addNote.html">
+          <ion-view view-title="Add Note">
+            <ion-content class="note-content">
+              <div class="row">
+                <div class="col">
+                  <div class="list" ng-controller="AddNoteCtrl"> 
+                    <label class="item item-input">
+                      <input type="text" placeholder="Title" ng-model="title">
+                    </label>
+                    <label class="item item-input">
+                      <textarea type="text" placeholder="Note body" ng-model="body"></textarea> 
+                    </label>
+                    <div class="button button-block button-positive" ng-model="addNoteButton" ng-disabled="!title || !body" ng-click="saveNote()">Submit</div>
+                  </div>
+                </div>
+              </div>
+            </ion-content>
+          </ion-view>
+        </script> <!-- End Add Note -->
+
+        <!-- List Note -->
+        <script type="text/ng-template" id="listNotes.html">
+          <ion-view view-title="List Note">
+            <ion-content class="note-content">
+              <div class="row">
+                <div class="col">
+                  <div class="list list-inset" ng-controller="ListNotesCtrl">
+                    <div ng-repeat="note in notes">
+                      <a ui-sref="singleNote({id: note.$id})" class="item">
+                        {{ note.title }}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ion-content>
+          </ion-view>
+        </script> <!-- End List Note -->
+
+        <!-- Single Note -->
+        <script type="text/ng-template" id="singleNote.html">
+          <div ng-controller="SingleNoteCtrl">
+            <ion-view view-title="{{ singleNotes.title }}">
+              <ion-content class="note-content">
+                <div class="row">
+                  <div class="col">
+                    <p class="text-center">{{ singleNotes.body }}</p>
+                  </div>
+                </div>
+              </ion-content>
+            </ion-view>
+          </div>  
+        </script> <!-- End Single Note -->
+
+        <!-- Delete Note -->
+        <script type="text/ng-template" id="deleteNote.html">
+          <ion-view view-title="Delete ?">
+            <ion-content class="note-content">
+              <div class="row">
+                <div class="col">
+                  <div class="" ng-controller="DeleteNoteCtrl">
+                    <ion-list>
+                      <ion-item ng-repeat="note in notes">
+                        <div class="item button button-block button-positive" ng-model="delButton" ng-click="showDetail(note.$id)">Delete {{ note.title }}</div>
+                      </ion-item>
+                    </ion-list>
+                  </div>
+                </div>
+              </div>
+            </ion-content>
+          </ion-view>
+        </script> <!-- End Delete Note -->
+
+        <!-- Edit Note -->
+        <script type="text/ng-template" id="editNote.html">
+          <ion-view view-title="Update">
+            <ion-content class="note-content">
+              <div class="row">
+                <div class="col">
+                  <div class="" ng-controller="EditNoteCtrl">
+                    <ion-list>
+                      <ion-item ng-repeat="note in notes">
+                        <div class="item button button-block button-positive" ng-model="delButton" ui-sref="updateNote({id: note.$id})" nav-direction="enter">Edit {{ note.title }}</div>
+                      </ion-item>
+                    </ion-list>
+                  </div>
+                </div>
+              </div>
+            </ion-content>
+          </ion-view>
+        </script> <!-- End Edit Note -->
+
+        <!-- Update Note -->
+        <script type="text/ng-template" id="updateNote.html">
+          <ion-view view-title="Update Note">
+            <ion-content class="note-content">
+              <div class="row">
+                <div class="col">
+                  <div class="list" ng-controller="UpdateNoteCtrl"> 
+                    <label class="item item-input">
+                      <input type="text" placeholder="Title" ng-model="title">
+                    </label>
+                    <label class="item item-input">
+                      <textarea type="text" placeholder="Note body" ng-model="body"></textarea> 
+                    </label>
+                    <div class="button button-block button-positive" ng-model="updateNoteButton" ng-disabled="!title || !body" ng-click="updateNote(myid)">Update</div>
+                  </div>
+                </div>
+              </div>
+            </ion-content>
+          </ion-view>
+        </script> <!-- End Update Note -->
+
+      </ion-nav-bar>
+    </ion-pane>
+  </body>
+</html>
