@@ -1,3 +1,13 @@
+// List All Note Controller
+app.controller('ListNotesCtrl', ['$scope', 'noteService', function($scope, noteService) {
+	$scope.notes = noteService.all;
+}]);
+
+// Single Note Controller
+app.controller('SingleNoteCtrl', ['$scope', 'noteService', '$state', '$stateParams', function($scope, noteService, $state, $stateParams) {
+	$scope.singleNotes = noteService.get($stateParams.id);
+}]);
+
 // Add Note Controller
 app.controller('AddNoteCtrl', ['$scope', '$firebaseArray', '$state', 'noteService', function($scope, $firebaseArray, $state, noteService) {
 	// console.log("Added");
@@ -10,34 +20,6 @@ app.controller('AddNoteCtrl', ['$scope', '$firebaseArray', '$state', 'noteServic
 
 		$state.go('home');
 	}
-}]);
-
-// List All Note Controller
-app.controller('ListNotesCtrl', ['$scope', 'noteService', function($scope, noteService) {
-	$scope.notes = noteService.all;
-}]);
-
-// Single Note Controller
-app.controller('SingleNoteCtrl', ['$scope', 'noteService', '$state', '$stateParams', function($scope, noteService, $state, $stateParams) {
-	$scope.singleNotes = noteService.get($stateParams.id);
-}]);
-
-// Delete Note Controller
-app.controller('DeleteNoteCtrl', ['$scope', 'noteService', '$state', '$ionicActionSheet', function($scope, noteService, $state, $ionicActionSheet) {
-	$scope.notes = noteService.all;
-	$scope.showDetail = function (id) {
-		$ionicActionSheet.show({
-			destructiveText: 'Delete',
-			titleText: 'Are you sure?',
-			cancelText: 'Cancel',
-
-			destructiveButtonClicked: function() {
-				var rem = $scope.notes.$getRecord(id);
-				$scope.notes.$remove(rem);
-				return true;
-			}
-		});
-	};
 }]);
 
 // Edit Note Controller
@@ -61,5 +43,23 @@ app.controller('UpdateNoteCtrl', ['$scope', 'noteService', '$state', '$statePara
 
 		$scope.notes.$save(ed);
 		$state.go('editNote');
+	};
+}]);
+
+// Delete Note Controller
+app.controller('DeleteNoteCtrl', ['$scope', 'noteService', '$state', '$ionicActionSheet', function($scope, noteService, $state, $ionicActionSheet) {
+	$scope.notes = noteService.all;
+	$scope.showDetail = function (id) {
+		$ionicActionSheet.show({
+			destructiveText: 'Delete',
+			titleText: 'Are you sure?',
+			cancelText: 'Cancel',
+
+			destructiveButtonClicked: function() {
+				var rem = $scope.notes.$getRecord(id);
+				$scope.notes.$remove(rem);
+				return true;
+			}
+		});
 	};
 }]);
