@@ -67,5 +67,11 @@ app.config(function($stateProvider, $urlRouterProvider){
     templateUrl: 'deleteNote.html'
   });
 
+  $stateProvider.state('doneNote', {
+    url: '/done',
+    controller: 'DoneNoteCtrl',
+    templateUrl: 'doneNote.html'
+  });
+
   $urlRouterProvider.otherwise('/');
 });

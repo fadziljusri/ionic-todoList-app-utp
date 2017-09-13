@@ -1,15 +1,15 @@
 // List All Note Controller
-app.controller('ListNotesCtrl', ['$scope', 'noteService', function($scope, noteService) {
+app.controller('ListNotesCtrl', ['$scope', 'noteService', function ($scope, noteService) {
 	$scope.notes = noteService.all;
 }]);
 
 // Single Note Controller
-app.controller('SingleNoteCtrl', ['$scope', 'noteService', '$state', '$stateParams', function($scope, noteService, $state, $stateParams) {
+app.controller('SingleNoteCtrl', ['$scope', 'noteService', '$state', '$stateParams', function ($scope, noteService, $state, $stateParams) {
 	$scope.singleNotes = noteService.get($stateParams.id);
 }]);
 
 // Add Note Controller
-app.controller('AddNoteCtrl', ['$scope', '$firebaseArray', '$state', 'noteService', function($scope, $firebaseArray, $state, noteService) {
+app.controller('AddNoteCtrl', ['$scope', '$firebaseArray', '$state', 'noteService', function ($scope, $firebaseArray, $state, noteService) {
 	// console.log("Added");
 	$scope.saveNote = function () {
 		$scope.newNote = noteService.all;
@@ -23,12 +23,12 @@ app.controller('AddNoteCtrl', ['$scope', '$firebaseArray', '$state', 'noteServic
 }]);
 
 // Edit Note Controller
-app.controller('EditNoteCtrl', ['$scope', 'noteService', '$state', function($scope, noteService, $state) {
+app.controller('EditNoteCtrl', ['$scope', 'noteService', '$state', function ($scope, noteService, $state) {
 	$scope.notes = noteService.all;
 }]);
 
 // Update Note Controller
-app.controller('UpdateNoteCtrl', ['$scope', 'noteService', '$state', '$stateParams', function($scope, noteService, $state, $stateParams) {
+app.controller('UpdateNoteCtrl', ['$scope', 'noteService', '$state', '$stateParams', function ($scope, noteService, $state, $stateParams) {
 	$scope.notes = noteService.all;
 	$scope.singleNote = noteService.get($stateParams.id);
 
@@ -36,7 +36,7 @@ app.controller('UpdateNoteCtrl', ['$scope', 'noteService', '$state', '$statePara
 	$scope.body = $scope.singleNote.body;
 	$scope.myid = $scope.singleNote.$id;
 
-	$scope.updateNote = function(id) {
+	$scope.updateNote = function (id) {
 		var ed = $scope.notes.$getRecord(id);
 		ed.title = $scope.title;
 		ed.body = $scope.body;
@@ -47,7 +47,7 @@ app.controller('UpdateNoteCtrl', ['$scope', 'noteService', '$state', '$statePara
 }]);
 
 // Delete Note Controller
-app.controller('DeleteNoteCtrl', ['$scope', 'noteService', '$state', '$ionicActionSheet', function($scope, noteService, $state, $ionicActionSheet) {
+app.controller('DeleteNoteCtrl', ['$scope', 'noteService', '$state', '$ionicActionSheet', function ($scope, noteService, $state, $ionicActionSheet) {
 	$scope.notes = noteService.all;
 	$scope.showDetail = function (id) {
 		$ionicActionSheet.show({
@@ -55,11 +55,41 @@ app.controller('DeleteNoteCtrl', ['$scope', 'noteService', '$state', '$ionicActi
 			titleText: 'Are you sure?',
 			cancelText: 'Cancel',
 
-			destructiveButtonClicked: function() {
+			destructiveButtonClicked: function () {
 				var rem = $scope.notes.$getRecord(id);
 				$scope.notes.$remove(rem);
 				return true;
 			}
+		});
+	};
+}]);
+
+// Done Note Controller
+app.controller('DoneNoteCtrl', ['$scope', 'noteService', '$state', '$ionicActionSheet', function ($scope, noteService, $state, $ionicActionSheet) {
+	$scope.notes = noteService.all;
+	// console.log("Done Ctrl");
+	$scope.showDetail = function (id) {
+		$ionicActionSheet.show({
+			destructiveText: 'Mark as Done',
+			titleText: 'Are you sure?',
+			cancelText: 'Cancel',
+
+			destructiveButtonClicked: function () {
+				var upd = $scope.notes.$getRecord(id);
+				// $scope.notes.$remove(rem);
+
+				upd.completed = true;
+
+				$scope.notes.$save(upd);
+				return true;
+			}
+			// $scope.newNote = noteService.all;
+			// $scope.newNote.$add({
+			// 	title: $scope.title,
+			// 	body: $scope.body
+			// });
+
+			// $state.go('home');
 		});
 	};
 }]);
