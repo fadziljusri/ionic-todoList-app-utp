@@ -1,6 +1,49 @@
 // List All Note Controller
-app.controller('ListNotesCtrl', ['$scope', 'noteService', function ($scope, noteService) {
+app.controller('ListNotesCtrl', ['$scope', 'noteService', '$ionicActionSheet', '$state', function ($scope, noteService, $ionicActionSheet, $state) {
 	$scope.notes = noteService.all;
+
+	$scope.update = function (id) {
+		// console.log(id);
+		$ionicActionSheet.show({
+			destructiveText: 'Mark as Done',
+			titleText: 'Are you sure?',
+			cancelText: 'Cancel',
+
+			destructiveButtonClicked: function () {
+				var upd = $scope.notes.$getRecord(id);
+				// $scope.notes.$remove(rem);
+
+				upd.completed = true;
+
+				$scope.notes.$save(upd);
+				return true;
+			}
+		});
+	};
+
+	$scope.del = function (id) {
+		console.log(id);
+		$ionicActionSheet.show({
+			destructiveText: 'Delete',
+			titleText: 'Are you sure?',
+			cancelText: 'Cancel',
+
+			destructiveButtonClicked: function () {
+				var rem = $scope.notes.$getRecord(id);
+				$scope.notes.$remove(rem);
+				return true;
+			}
+		});
+	};
+
+	$scope.add = function(){
+		console.log("aaa");
+		$state.go("addNote");
+	};
+
+	$scope.edit = function(){
+		$state.go("editNote");
+	}
 }]);
 
 // Single Note Controller

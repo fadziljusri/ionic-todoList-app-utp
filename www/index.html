@@ -77,10 +77,10 @@
                 <p class="text-center">Todo List..</p>
 
                 <a class="button button-block button-positive" ui-sref="listNotes">View</a>
-                <a class="button button-block button-calm" ui-sref="addNote">Add</a>
-                <a class="button button-block button-balanced" ui-sref="editNote">Edit</a>
-                <a class="button button-block button-assertive" ui-sref="deleteNote">Delete</a>
-                <a class="button button-block button-energized" ui-sref="doneNote">Mark as done</a>
+                <!-- <a class="button button-block button-calm" ui-sref="addNote">Add</a>
+                <a class="button button-block button-balanced" ui-sref="editNote">Edit</a> -->
+                <!-- <a class="button button-block button-assertive" ui-sref="deleteNote">Delete</a>
+                <a class="button button-block button-energized" ui-sref="doneNote">Mark as done</a> -->
 
 
               </div>
@@ -127,24 +127,37 @@
                       
                     </div> -->
                   <div class="list">
-
+                    <button class="button button-outline button-calm" ng-click="add()">
+                        Add Note
+                    </button>
+                    <button class="button button-outline button-balanced" ng-click="edit()">
+                        Edit Note
+                    </button>
+                    <br>
+                    <br>
+                    <br>
                     <div class="item item-divider">
                       Ongoing..
                     </div>
-                    <div ng-repeat="note in notes">
-                      <a ui-sref="singleNote({id: note.$id})" class="item" ng-if="!note.completed">
+                    <div ng-repeat="note in notes" ng-if="!note.completed" class="item item-button-right">
+                      <a ui-sref="singleNote({id: note.$id})">
                         {{ note.title }}
                       </a>
+                      <button class="button button-positive" ng-click="update(note.$id)">
+                          <i class="icon ion-android-done"></i>
+                      </button>
                     </div>
                     <div class="item item-divider">
                       Completed
                     </div>
-                    <div ng-repeat="note in notes">
-                      <a ui-sref="singleNote({id: note.$id})" class="item" ng-if="note.completed">
+                    <div ng-repeat="note in notes" ng-if="note.completed" class="item item-button-right">
+                      <a ui-sref="singleNote({id: note.$id})">
                           {{ note.title }}
                         </a>
+                      <button class="button button-assertive" ng-click="del(note.$id)">
+                            <i class="icon ion-close-round"></i>
+                        </button>
                     </div>
-
                   </div>
                 </div>
               </div>
